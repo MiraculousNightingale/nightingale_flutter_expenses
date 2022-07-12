@@ -22,7 +22,10 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatelessWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
+  const MyHomePage({
+    required this.title,
+    Key? key,
+  }) : super(key: key);
 
   final String title;
 
@@ -30,14 +33,14 @@ class MyHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Test text'),
+        title: const Text('Test text'),
       ),
       body: Center(
         child: Column(
           children: [
             Container(
-              decoration: BoxDecoration(color: Colors.blue),
-              child: Text('Chart'),
+              decoration: const BoxDecoration(color: Colors.blue),
+              child: const Text('Chart'),
             ),
             TransactionView(),
           ],
@@ -46,5 +49,3 @@ class MyHomePage extends StatelessWidget {
     );
   }
 }
-
-

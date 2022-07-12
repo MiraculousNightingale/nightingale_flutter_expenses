@@ -12,7 +12,7 @@ class TransactionView extends StatefulWidget {
 }
 
 class _TransactionViewState extends State<TransactionView> {
-  final List<Transaction> _getTransactions = [
+  final List<Transaction> _userTransactions = [
     Transaction(
         title: 'Transaction 1', amount: 228, date: DateTime.now(), id: 'cock1'),
     Transaction(
@@ -25,9 +25,21 @@ class _TransactionViewState extends State<TransactionView> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        TransactionForm(),
-        TransactionList(userTransactions: _getTransactions),
+        TransactionForm(addTx: _addTransaction),
+        TransactionList(userTransactions: _userTransactions),
       ],
     );
+  }
+
+  void _addTransaction(String txTitle, double txAmount) {
+    final newTx = Transaction(
+      title: txTitle,
+      amount: txAmount,
+      id: '111',
+      date: DateTime.now(),
+    );
+    setState(() {
+      _userTransactions.add(newTx);
+    });
   }
 }

@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 
 class TransactionForm extends StatelessWidget {
-  TransactionForm({Key? key}) : super(key: key);
+  TransactionForm({
+    required this.addTx,
+    Key? key,
+  }) : super(key: key);
+
+  final Function addTx;
 
   final titleInputCtrl = TextEditingController();
   final amountInputCtrl = TextEditingController();
@@ -12,7 +17,7 @@ class TransactionForm extends StatelessWidget {
       elevation: 5,
       child: Container(
         padding: const EdgeInsets.all(10),
-        decoration: BoxDecoration(),
+        //decoration: const BoxDecoration(),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
@@ -20,7 +25,7 @@ class TransactionForm extends StatelessWidget {
               controller: titleInputCtrl,
               decoration: InputDecoration(
                 labelText: 'Title',
-                focusedBorder: OutlineInputBorder(
+                focusedBorder: const OutlineInputBorder(
                   borderSide: BorderSide(
                     color: Colors.deepPurpleAccent,
                   ),
@@ -32,14 +37,15 @@ class TransactionForm extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             TextField(
               controller: amountInputCtrl,
+              keyboardType: TextInputType.number,
               decoration: InputDecoration(
                 labelText: 'Amount',
-                focusedBorder: OutlineInputBorder(
+                focusedBorder: const OutlineInputBorder(
                   borderSide: BorderSide(
                     color: Colors.deepPurpleAccent,
                   ),
@@ -56,9 +62,9 @@ class TransactionForm extends StatelessWidget {
             ),
             OutlinedButton(
               onPressed: () {
-                //TODO: cock
+                addTx(titleInputCtrl.text, double.parse(amountInputCtrl.text));
               },
-              child: Text('Add Transaction'),
+              child: const Text('Add Transaction'),
             ),
           ],
         ),
