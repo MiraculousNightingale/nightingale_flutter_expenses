@@ -36,61 +36,87 @@ class _TransactionListState extends State<TransactionList> {
           : ListView.builder(
               itemBuilder: (BuildContext context, int index) {
                 return Card(
-                  child: Row(
-                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                        margin: const EdgeInsets.fromLTRB(15, 10, 25, 10),
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).primaryColorLight,
-                          border: Border.all(
-                              color: Theme.of(context).primaryColorDark,
-                              width: 2),
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(10)),
-                        ),
-                        child: Text(
-                          '\$ ${widget.userTransactions[index].amount.toStringAsFixed(2)}',
-                          style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
+                  elevation: 5,
+                  margin:
+                      const EdgeInsets.symmetric(vertical: 8, horizontal: 5),
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      radius: 30,
+                      child: Padding(
+                        padding: const EdgeInsets.all(6),
+                        child: FittedBox(
+                          child: Text(
+                            '\$${widget.userTransactions[index].amount}',
                           ),
                         ),
                       ),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              widget.userTransactions[index].title,
-                              style: Theme.of(context).textTheme.headline6,
-                            ),
-                            Text(
-                              DateFormat.yMMMd()
-                                  .format(widget.userTransactions[index].date),
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.grey[700],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          setState((){
-                            widget.userTransactions.removeAt(index);
-                          });
-                        },
-                        icon: const Icon(Icons.delete_outline),
-                      ),
-                      const SizedBox(
-                        width: 15,
-                      ),
-                    ],
+                    ),
+                    title: Text(
+                      widget.userTransactions[index].title,
+                      style: Theme.of(context).textTheme.headline6,
+                    ),
+                    subtitle: Text(
+                      DateFormat.yMMMd()
+                          .format(widget.userTransactions[index].date),
+                    ),
                   ),
                 );
+                // Card(
+                //   child: Row(
+                //     // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //     children: [
+                //       Container(
+                //         margin: const EdgeInsets.fromLTRB(15, 10, 25, 10),
+                //         padding: const EdgeInsets.all(10),
+                //         decoration: BoxDecoration(
+                //           color: Theme.of(context).primaryColorLight,
+                //           border: Border.all(
+                //               color: Theme.of(context).primaryColorDark,
+                //               width: 2),
+                //           borderRadius:
+                //           const BorderRadius.all(Radius.circular(10)),
+                //         ),
+                //         child: Text(
+                //           '\$ ${widget.userTransactions[index].amount.toStringAsFixed(2)}',
+                //           style: const TextStyle(
+                //             fontSize: 20,
+                //             fontWeight: FontWeight.bold,
+                //           ),
+                //         ),
+                //       ),
+                //       Expanded(
+                //         child: Column(
+                //           crossAxisAlignment: CrossAxisAlignment.start,
+                //           children: [
+                //             Text(
+                //               widget.userTransactions[index].title,
+                //               style: Theme.of(context).textTheme.headline6,
+                //             ),
+                //             Text(
+                //               DateFormat.yMMMd()
+                //                   .format(widget.userTransactions[index].date),
+                //               style: TextStyle(
+                //                 fontSize: 16,
+                //                 color: Colors.grey[700],
+                //               ),
+                //             ),
+                //           ],
+                //         ),
+                //       ),
+                //       IconButton(
+                //         onPressed: () {
+                //           setState((){
+                //             widget.userTransactions.removeAt(index);
+                //           });
+                //         },
+                //         icon: const Icon(Icons.delete_outline),
+                //       ),
+                //       const SizedBox(
+                //         width: 15,
+                //       ),
+                //     ],
+                //   ),
+                // )
               },
               itemCount: widget.userTransactions.length,
             ),
