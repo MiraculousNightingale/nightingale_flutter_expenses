@@ -65,12 +65,12 @@ class _MyHomePageState extends State<MyHomePage> {
         title: 'Transaction 3', amount: 822, date: DateTime.now(), id: 'cock3'),
   ];
 
-  void _addTransaction(String txTitle, double txAmount) {
+  void _addTransaction(String txTitle, double txAmount, DateTime date) {
     final newTx = Transaction(
       title: txTitle,
       amount: txAmount,
       id: 'cock${Random().nextInt(256)}',
-      date: DateTime.now(),
+      date: date,
     );
     setState(() {
       _userTransactions.add(newTx);
@@ -94,7 +94,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Test text'),
+        title: const Text('Personal Expenses'),
         actions: [
           IconButton(
               onPressed: () => _showTransactionForm(context),

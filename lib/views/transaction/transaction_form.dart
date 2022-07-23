@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class TransactionForm extends StatefulWidget {
   const TransactionForm({
@@ -13,9 +14,24 @@ class TransactionForm extends StatefulWidget {
 }
 
 class _TransactionFormState extends State<TransactionForm> {
-  final titleInputCtrl = TextEditingController();
+  final _titleInputCtrl = TextEditingController();
+  final _amountInputCtrl = TextEditingController();
+  DateTime? _selectedDate;
 
-  final amountInputCtrl = TextEditingController();
+  void _presentDatePicker() {
+    showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2019),
+      lastDate: DateTime.now(),
+    ).then((value) {
+      if (value != null) {
+        setState(() {
+          _selectedDate = value;
+        });
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +44,7 @@ class _TransactionFormState extends State<TransactionForm> {
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             TextField(
-              controller: titleInputCtrl,
+              controller: _titleInputCtrl,
               decoration: InputDecoration(
                 labelText: 'Title',
                 focusedBorder: const OutlineInputBorder(
@@ -47,7 +63,7 @@ class _TransactionFormState extends State<TransactionForm> {
               height: 10,
             ),
             TextField(
-              controller: amountInputCtrl,
+              controller: _amountInputCtrl,
               //onSubmitted: ,
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
@@ -65,16 +81,43 @@ class _TransactionFormState extends State<TransactionForm> {
               ),
             ),
             const SizedBox(
+              height: 10,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: Text(
+                    _selectedDate == null
+                        ? 'No Date Selected'
+                        : DateFormat.yMMMd().format(_selectedDate!),
+                    style: Theme.of(context).textTheme.subtitle1,
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    _presentDatePicker();
+                  },
+                  child: const Text(
+                    'Choose Date',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(
               height: 5,
             ),
             OutlinedButton(
               onPressed: () {
-                final String enteredTitle = titleInputCtrl.text;
+                final String enteredTitle = _titleInputCtrl.text;
                 final double? enteredAmount =
-                    double.tryParse(amountInputCtrl.text);
+                    double.tryParse(_amountInputCtrl.text);
                 if (enteredAmount != null &&
+                    _selectedDate != null &&
                     (enteredTitle.isNotEmpty || enteredAmount > 0)) {
-                  widget.addTx(enteredTitle, enteredAmount);
+                  widget.addTx(enteredTitle, enteredAmount, _selectedDate);
                   Navigator.of(context).pop();
                 }
               },
