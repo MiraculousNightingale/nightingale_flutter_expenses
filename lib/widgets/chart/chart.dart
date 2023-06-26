@@ -1,22 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:nightingale_flutter_expenses/models/transaction.dart';
-import 'package:nightingale_flutter_expenses/views/chart/chart_bar.dart';
+import 'package:nightingale_flutter_expenses/models/expense.dart';
+import 'package:nightingale_flutter_expenses/widgets/chart/chart_bar.dart';
 
 class Chart extends StatelessWidget {
   const Chart({required this.recentTransactions, Key? key}) : super(key: key);
 
-  final List<Transaction> recentTransactions;
+  final List<Expense> recentTransactions;
 
   List<Map<String, dynamic>> get groupedTransactionValues {
     return List.generate(7, (index) {
       final weekDay = DateTime.now().subtract(Duration(days: index));
       double sumAmount = 0;
       for (final transaction in recentTransactions) {
-        if (transaction.date.day == weekDay.day &&
-            transaction.date.month == weekDay.month &&
-            transaction.date.year == weekDay.year) {
-          sumAmount += transaction.amount;
+        final date = transaction.date;
+        if (date != null) {
+          if (date.day == weekDay.day &&
+              date.month == weekDay.month &&
+              date.year == weekDay.year) {
+            sumAmount += transaction.amount;
+          }
         }
       }
       //print('Sum for day ${DateFormat.E().format(weekDay)} = $sumAmount');
