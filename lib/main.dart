@@ -37,18 +37,34 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   final List<Expense> _userTransactions = [
     Expense(
-        title: 'Transaction 1', amount: 228, date: DateTime.now(), id: 'cock1'),
+      title: 'Transaction 1',
+      amount: 228,
+      type: ExpenseType.food,
+      date: DateTime.now(),
+      id: 'cock1',
+    ),
     Expense(
-        title: 'Transaction 2', amount: 322, date: DateTime.now(), id: 'cock2'),
+      title: 'Transaction 2',
+      amount: 322,
+      type: ExpenseType.leisure,
+      date: DateTime.now(),
+      id: 'cock2',
+    ),
     Expense(
-        title: 'Transaction 3', amount: 822, date: DateTime.now(), id: 'cock3'),
+      title: 'Transaction 3',
+      amount: 822,
+      type: ExpenseType.travel,
+      date: DateTime.now(),
+      id: 'cock3',
+    ),
   ];
 
   void _addTransaction(String txTitle, double txAmount, DateTime date) {
     final newTx = Expense(
+      id: 'cock${Random().nextInt(256)}',
       title: txTitle,
       amount: txAmount,
-      id: 'cock${Random().nextInt(256)}',
+      type: ExpenseType.none,
       date: date,
     );
     setState(() {
@@ -78,12 +94,15 @@ class _MainPageState extends State<MainPage> {
     );
   }
 
-  List<Expense> get _recentTransactions => _userTransactions
-      .where((element) =>
-          element.date != null &&
-          element.date!
-              .isAfter(DateTime.now().subtract(const Duration(days: 7))))
-      .toList();
+  List<Expense> get _recentTransactions {
+    return _userTransactions
+        .where(
+          (element) => element.date.isAfter(
+            DateTime.now().subtract(const Duration(days: 7)),
+          ),
+        )
+        .toList();
+  }
 
   bool _showChart = false;
 
