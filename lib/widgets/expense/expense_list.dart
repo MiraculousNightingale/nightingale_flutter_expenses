@@ -62,9 +62,8 @@ class _ExpenseListState extends State<ExpenseList> {
                       style: theme.textTheme.titleSmall,
                     ),
                     subtitle: Text(
-                      // DateFormat.yMMMd()
-                      // .format(widget.userTransactions[index].date),
-                      '',
+                      DateFormat.yMMMd()
+                          .format(widget.userTransactions[index].date),
                       style: theme.textTheme.titleSmall,
                     ),
                     trailing: mq.size.width > 460

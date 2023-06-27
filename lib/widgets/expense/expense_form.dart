@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:localstore/localstore.dart';
 import 'package:nightingale_flutter_expenses/widgets/expense/expense_form_date_row.dart';
 
 import '../../models/expense.dart';
 
 class ExpenseForm extends StatefulWidget {
   const ExpenseForm({
-    required this.addExpense,
     required this.expense,
     Key? key,
   }) : super(key: key);
 
-  final Function addExpense;
   final Expense expense;
 
   @override
@@ -21,32 +20,54 @@ class ExpenseForm extends StatefulWidget {
 class _ExpenseFormState extends State<ExpenseForm> {
   final _titleInputCtrl = TextEditingController();
   final _amountInputCtrl = TextEditingController();
-  DateTime? _selectedDate;
-
-  void _presentDatePicker() {
-    showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2019),
-      lastDate: DateTime.now(),
-    ).then((value) {
-      if (value != null) {
-        setState(() {
-          _selectedDate = value;
-        });
-      }
-    });
-  }
 
   @override
   void initState() {
     super.initState();
+    _titleInputCtrl.text = widget.expense.title;
     _titleInputCtrl.addListener(() {
       widget.expense.title = _titleInputCtrl.text;
     });
+    _amountInputCtrl.text = widget.expense.amount.toString();
     _amountInputCtrl.addListener(() {
       widget.expense.amount = double.tryParse(_amountInputCtrl.text) ?? 0;
     });
+  }
+
+  @override
+  void dispose() {
+    _titleInputCtrl.dispose();
+    _amountInputCtrl.dispose();
+    super.dispose();
+  }
+
+  void _saveExpense() {
+    final expense = widget.expense;
+    if (expense.title.trim().isEmpty ||
+        expense.amount <= 0 ||
+        expense.type == ExpenseType.none ||
+        expense.date.compareTo(Expense.emptyDate) == 0) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Invalid data'),
+          content: const Text(
+            'All fields have to be filled and amount has to be larger than 0.',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
+      // TODO: implement provider
+      //Localstore.instance.collection('expenses').doc().set(data)
+      return;
+    }
   }
 
   @override
@@ -54,7 +75,7 @@ class _ExpenseFormState extends State<ExpenseForm> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           TextField(
             controller: _titleInputCtrl,
@@ -77,7 +98,6 @@ class _ExpenseFormState extends State<ExpenseForm> {
           ),
           TextField(
             controller: _amountInputCtrl,
-            //onSubmitted: ,
             keyboardType: TextInputType.number,
             decoration: InputDecoration(
               labelText: 'Amount',
@@ -96,21 +116,43 @@ class _ExpenseFormState extends State<ExpenseForm> {
           const SizedBox(
             height: 10,
           ),
+          const SizedBox(
+            height: 5,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Padding(
+                padding: EdgeInsets.all(10),
+                child: Text('Expense Type'),
+              ),
+              DropdownButton(
+                value: widget.expense.type,
+                items: [
+                  for (final type in ExpenseType.values)
+                    DropdownMenuItem(
+                      value: type,
+                      child: Text(
+                        '${type.name[0].toUpperCase()}${type.name.substring(1)}',
+                      ),
+                    )
+                ],
+                onChanged: (ExpenseType? value) {
+                  setState(() {
+                    widget.expense.type = value ?? ExpenseType.none;
+                  });
+                },
+              ),
+            ],
+          ),
           ExpenseFormDateRow(expense: widget.expense),
           const SizedBox(
             height: 5,
           ),
           OutlinedButton(
             onPressed: () {
-              final String enteredTitle = _titleInputCtrl.text;
-              final double? enteredAmount =
-                  double.tryParse(_amountInputCtrl.text);
-              if (enteredAmount != null &&
-                  _selectedDate != null &&
-                  (enteredTitle.isNotEmpty || enteredAmount > 0)) {
-                widget.addExpense(enteredTitle, enteredAmount, _selectedDate);
-                Navigator.of(context).pop();
-              }
+              print(widget.expense.title);
+              //_saveExpense();
             },
             child: const Text('Add Transaction'),
           ),

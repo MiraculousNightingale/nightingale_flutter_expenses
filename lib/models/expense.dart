@@ -20,7 +20,7 @@ class Expense {
         title = '',
         amount = 0,
         type = ExpenseType.none,
-        date = DateTime.fromMicrosecondsSinceEpoch(0);
+        date = emptyDate;
 
   Expense.assignId(Expense expense)
       : id = 'random_ass id',
@@ -34,4 +34,5 @@ class Expense {
   double amount;
   ExpenseType type;
   DateTime date;
+  static final emptyDate = DateTime.fromMicrosecondsSinceEpoch(0);
 }

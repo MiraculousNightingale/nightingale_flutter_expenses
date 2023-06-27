@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:localstore/localstore.dart';
 import 'package:nightingale_flutter_expenses/theme_config.dart';
 import 'package:nightingale_flutter_expenses/widgets/chart/chart.dart';
 
@@ -9,7 +10,9 @@ import 'widgets/expense/expense_form.dart';
 import 'widgets/expense/expense_list.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
+  // Localstore.instance.collection('expenses');
 }
 
 class MyApp extends StatelessWidget {
@@ -59,19 +62,6 @@ class _MainPageState extends State<MainPage> {
     ),
   ];
 
-  void _addTransaction(String txTitle, double txAmount, DateTime date) {
-    final newTx = Expense(
-      id: 'cock${Random().nextInt(256)}',
-      title: txTitle,
-      amount: txAmount,
-      type: ExpenseType.none,
-      date: date,
-    );
-    setState(() {
-      _userTransactions.add(newTx);
-    });
-  }
-
   void _deleteTransaction(String id) {
     setState(() {
       _userTransactions.removeWhere((element) => element.id == id);
@@ -80,6 +70,7 @@ class _MainPageState extends State<MainPage> {
 
   void _showTransactionForm(BuildContext context) {
     final mq = MediaQuery.of(context);
+    final emptyExpense = Expense.empty();
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -87,8 +78,7 @@ class _MainPageState extends State<MainPage> {
           BoxConstraints(maxHeight: mq.size.height - mq.viewPadding.top),
       builder: (builderContext) {
         return ExpenseForm(
-          expense: Expense.empty(),
-          addExpense: _addTransaction,
+          expense: emptyExpense,
         );
       },
     );
