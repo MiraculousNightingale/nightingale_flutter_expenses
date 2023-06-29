@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:localstore/localstore.dart';
 import 'package:nightingale_flutter_expenses/widgets/expense/expense_form_date_row.dart';
+import 'package:provider/provider.dart';
 
 import '../../models/expense.dart';
+import '../../providers/expenses.dart';
 
 class ExpenseForm extends StatefulWidget {
   const ExpenseForm({
@@ -41,7 +43,7 @@ class _ExpenseFormState extends State<ExpenseForm> {
     super.dispose();
   }
 
-  void _saveExpense() {
+  Future<void> _saveExpense() async {
     final expense = widget.expense;
     if (expense.title.trim().isEmpty ||
         expense.amount <= 0 ||
@@ -64,10 +66,10 @@ class _ExpenseFormState extends State<ExpenseForm> {
           ],
         ),
       );
-      // TODO: implement provider
-      //Localstore.instance.collection('expenses').doc().set(data)
       return;
     }
+    await Provider.of<Expenses>(context, listen: false).createExpense(expense);
+    Navigator.of(context).pop();
   }
 
   @override
@@ -135,7 +137,7 @@ class _ExpenseFormState extends State<ExpenseForm> {
                       child: Text(
                         '${type.name[0].toUpperCase()}${type.name.substring(1)}',
                       ),
-                    )
+                    ),
                 ],
                 onChanged: (ExpenseType? value) {
                   setState(() {
@@ -151,8 +153,7 @@ class _ExpenseFormState extends State<ExpenseForm> {
           ),
           OutlinedButton(
             onPressed: () {
-              print(widget.expense.title);
-              //_saveExpense();
+              _saveExpense();
             },
             child: const Text('Add Transaction'),
           ),

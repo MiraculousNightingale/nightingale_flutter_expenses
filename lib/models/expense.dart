@@ -7,6 +7,11 @@ enum ExpenseType {
 }
 
 class Expense {
+  static ExpenseType expenseTypeFromString(String str) {
+    return ExpenseType.values
+        .firstWhere((element) => element.name.compareTo(str) == 0);
+  }
+
   Expense({
     required this.id,
     required this.title,
@@ -22,12 +27,12 @@ class Expense {
         type = ExpenseType.none,
         date = emptyDate;
 
-  Expense.assignId(Expense expense)
-      : id = 'random_ass id',
-        title = expense.title,
-        amount = expense.amount,
-        type = expense.type,
-        date = expense.date;
+  Expense.fromLocalstore(String key, Map<String, dynamic> value)
+      : id = key.replaceFirst('/expenses/', ''),
+        title = value[keyTitle],
+        amount = value[keyAmount],
+        type = expenseTypeFromString(value[keyType]),
+        date = DateTime.fromMicrosecondsSinceEpoch(value[keyDate]);
 
   final String id;
   String title;
@@ -35,4 +40,9 @@ class Expense {
   ExpenseType type;
   DateTime date;
   static final emptyDate = DateTime.fromMicrosecondsSinceEpoch(0);
+
+  static const keyTitle = 'title';
+  static const keyAmount = 'amount';
+  static const keyType = 'type';
+  static const keyDate = 'date';
 }

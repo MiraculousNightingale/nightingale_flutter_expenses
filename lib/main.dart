@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:localstore/localstore.dart';
 import 'package:nightingale_flutter_expenses/theme_config.dart';
 import 'package:nightingale_flutter_expenses/widgets/chart/chart.dart';
+import 'package:provider/provider.dart';
 
 import 'models/expense.dart';
+import 'providers/expenses.dart';
 import 'widgets/expense/expense_form.dart';
 import 'widgets/expense/expense_list.dart';
 
@@ -20,10 +22,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Nightingale Flutter Expenses',
-      theme: ThemeConfig.theme,
-      home: const MainPage(),
+    return ChangeNotifierProvider(
+      create: (context) => Expenses(),
+      child: MaterialApp(
+        title: 'Nightingale Flutter Expenses',
+        theme: ThemeConfig.theme,
+        home: const MainPage(),
+      ),
     );
   }
 }
@@ -62,12 +67,6 @@ class _MainPageState extends State<MainPage> {
     ),
   ];
 
-  void _deleteTransaction(String id) {
-    setState(() {
-      _userTransactions.removeWhere((element) => element.id == id);
-    });
-  }
-
   void _showTransactionForm(BuildContext context) {
     final mq = MediaQuery.of(context);
     final emptyExpense = Expense.empty();
@@ -100,6 +99,7 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     final bool isLandscape =
         MediaQuery.of(context).orientation == Orientation.landscape;
+
     final AppBar appBar = AppBar(
       title: const Text('Personal Expenses'),
       actions: [
@@ -109,16 +109,28 @@ class _MainPageState extends State<MainPage> {
         ),
       ],
     );
-    final SizedBox txListWidget = SizedBox(
+
+    final providerExpenses = Provider.of<Expenses>(context, listen: false);
+
+    final SizedBox expenseList = SizedBox(
       height: (MediaQuery.of(context).size.height -
               appBar.preferredSize.height -
               MediaQuery.of(context).padding.top) *
           0.7,
-      child: ExpenseList(
-        userTransactions: _userTransactions,
-        deleteTransaction: _deleteTransaction,
-      ),
+      child: FutureBuilder(
+          future: providerExpenses.fetchAndSetExpenses(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const CircularProgressIndicator();
+            }
+            return Consumer<Expenses>(builder: (context, value, child) {
+              return ExpenseList(
+                expenses: value.expenses,
+              );
+            });
+          }),
     );
+
     return Scaffold(
       appBar: appBar,
       body: Center(
@@ -148,7 +160,7 @@ class _MainPageState extends State<MainPage> {
                           recentTransactions: _recentTransactions,
                         ),
                       )
-                    : txListWidget,
+                    : expenseList,
               if (!isLandscape)
                 SizedBox(
                   height: (MediaQuery.of(context).size.height -
@@ -159,7 +171,7 @@ class _MainPageState extends State<MainPage> {
                     recentTransactions: _recentTransactions,
                   ),
                 ),
-              if (!isLandscape) txListWidget,
+              if (!isLandscape) expenseList,
             ],
           ),
         ),
