@@ -25,8 +25,13 @@ class _ExpenseFormDateRowState extends State<ExpenseFormDateRow> {
     if (pickedDate != null) {
       setState(() => _selectedDate = pickedDate);
       widget.expense.date = pickedDate;
-      print(widget.expense.date);
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedDate = widget.expense.date;
   }
 
   @override

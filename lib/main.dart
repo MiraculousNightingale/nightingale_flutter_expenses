@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:localstore/localstore.dart';
 import 'package:nightingale_flutter_expenses/theme_config.dart';
@@ -68,16 +69,15 @@ class _MainPageState extends State<MainPage> {
   ];
 
   void _showTransactionForm(BuildContext context) {
-    final mq = MediaQuery.of(context);
     final emptyExpense = Expense.empty();
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      constraints:
-          BoxConstraints(maxHeight: mq.size.height - mq.viewPadding.top),
+      useSafeArea: true,
       builder: (builderContext) {
         return ExpenseForm(
           expense: emptyExpense,
+          isCreateMode: true,
         );
       },
     );

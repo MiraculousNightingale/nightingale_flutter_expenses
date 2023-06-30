@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:localstore/localstore.dart';
 import 'package:nightingale_flutter_expenses/widgets/expense/expense_form_date_row.dart';
 import 'package:provider/provider.dart';
 
@@ -10,10 +8,12 @@ import '../../providers/expenses.dart';
 class ExpenseForm extends StatefulWidget {
   const ExpenseForm({
     required this.expense,
+    required this.isCreateMode,
     Key? key,
   }) : super(key: key);
 
   final Expense expense;
+  final bool isCreateMode;
 
   @override
   State<ExpenseForm> createState() => _ExpenseFormState();
@@ -45,6 +45,7 @@ class _ExpenseFormState extends State<ExpenseForm> {
 
   Future<void> _saveExpense() async {
     final expense = widget.expense;
+
     if (expense.title.trim().isEmpty ||
         expense.amount <= 0 ||
         expense.type == ExpenseType.none ||
@@ -68,7 +69,18 @@ class _ExpenseFormState extends State<ExpenseForm> {
       );
       return;
     }
-    await Provider.of<Expenses>(context, listen: false).createExpense(expense);
+
+    if (widget.isCreateMode) {
+      await Provider.of<Expenses>(
+        context,
+        listen: false,
+      ).createExpense(expense);
+      Navigator.of(context).pop();
+      return;
+    }
+
+    // When editing existing record
+    await Provider.of<Expenses>(context, listen: false).updateExpense(expense);
     Navigator.of(context).pop();
   }
 
@@ -155,7 +167,7 @@ class _ExpenseFormState extends State<ExpenseForm> {
             onPressed: () {
               _saveExpense();
             },
-            child: const Text('Add Transaction'),
+            child: Text(widget.isCreateMode ? 'Add Expense' : 'Save Expense'),
           ),
         ],
       ),

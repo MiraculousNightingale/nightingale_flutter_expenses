@@ -14,12 +14,10 @@ class Chart extends StatelessWidget {
       double sumAmount = 0;
       for (final transaction in recentTransactions) {
         final date = transaction.date;
-        if (date != null) {
-          if (date.day == weekDay.day &&
-              date.month == weekDay.month &&
-              date.year == weekDay.year) {
-            sumAmount += transaction.amount;
-          }
+        if (date.day == weekDay.day &&
+            date.month == weekDay.month &&
+            date.year == weekDay.year) {
+          sumAmount += transaction.amount;
         }
       }
       //print('Sum for day ${DateFormat.E().format(weekDay)} = $sumAmount');

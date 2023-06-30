@@ -31,6 +31,16 @@ class Expenses with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> updateExpense(Expense expense) async {
+    await _localstore
+        .collection('expenses')
+        .doc(expense.id)
+        .set(expense.toJson());
+    final index = _expenses.indexWhere((element) => element.id == expense.id);
+    _expenses[index] = expense;
+    notifyListeners();
+  }
+
   int removeExpenseFromList(String id) {
     final index = _expenses.indexWhere((element) => element.id == id);
     _expenses.removeAt(index);

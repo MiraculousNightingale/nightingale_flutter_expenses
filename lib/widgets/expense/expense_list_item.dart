@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../../models/expense.dart';
 import '../../providers/expenses.dart';
+import 'expense_form.dart';
 
 class ExpenseListItem extends StatelessWidget {
   const ExpenseListItem({required this.expense, Key? key}) : super(key: key);
@@ -43,6 +44,22 @@ class ExpenseListItem extends StatelessWidget {
     );
   }
 
+  void _showEditingForm(BuildContext context) {
+    // View.of(context) can be used to consistently get screen padding and size(if needed)
+    // MediaQuery padding values don't work since this widget's context has no padding.
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      builder: (builderContext) {
+        return ExpenseForm(
+          expense: expense,
+          isCreateMode: false,
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final mq = MediaQuery.of(context);
@@ -69,21 +86,47 @@ class ExpenseListItem extends StatelessWidget {
           style: theme.textTheme.titleSmall,
         ),
         trailing: mq.size.width > 460
-            ? OutlinedButton.icon(
-                onPressed: () => _deleteExpense(context), // TODO: remove item
-                icon: const Icon(
-                  Icons.delete_outline,
-                  color: Colors.red,
-                ),
-                label: const Text(
-                  'Delete',
-                  style: TextStyle(color: Colors.red),
-                ),
+            ? Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  OutlinedButton.icon(
+                    onPressed: () => _showEditingForm(context),
+                    icon: const Icon(
+                      Icons.edit,
+                      color: Colors.black,
+                    ),
+                    label: const Text(
+                      'Edit',
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  ),
+                  OutlinedButton.icon(
+                    onPressed: () => _deleteExpense(context),
+                    icon: const Icon(
+                      Icons.delete_outline,
+                      color: Colors.red,
+                    ),
+                    label: const Text(
+                      'Delete',
+                      style: TextStyle(color: Colors.red),
+                    ),
+                  ),
+                ],
               )
-            : IconButton(
-                onPressed: () => _deleteExpense(context), // TODO: remove item
-                icon: const Icon(Icons.delete_outline),
-                color: Colors.red[900],
+            : Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    onPressed: () => _showEditingForm(context),
+                    icon: const Icon(Icons.edit),
+                    color: Colors.black,
+                  ),
+                  IconButton(
+                    onPressed: () => _deleteExpense(context),
+                    icon: const Icon(Icons.delete_outline),
+                    color: Colors.red[900],
+                  ),
+                ],
               ),
       ),
     );

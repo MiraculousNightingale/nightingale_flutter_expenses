@@ -27,12 +27,26 @@ class Expense {
         type = ExpenseType.none,
         date = emptyDate;
 
+  Expense.fromExpense(Expense expense)
+      : id = expense.id,
+        title = expense.title,
+        amount = expense.amount,
+        type = expense.type,
+        date = expense.date;
+
   Expense.fromLocalstore(String key, Map<String, dynamic> value)
       : id = key.replaceFirst('/expenses/', ''),
         title = value[keyTitle],
         amount = value[keyAmount],
         type = expenseTypeFromString(value[keyType]),
         date = DateTime.fromMicrosecondsSinceEpoch(value[keyDate]);
+
+  Map<String, dynamic> toJson() => {
+        keyTitle: title,
+        keyAmount: amount,
+        keyType: type.name,
+        keyDate: date.microsecondsSinceEpoch,
+      };
 
   final String id;
   String title;
