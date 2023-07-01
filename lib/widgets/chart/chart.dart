@@ -38,7 +38,6 @@ class Chart extends StatelessWidget {
       margin: const EdgeInsets.all(20),
       child: Container(
         padding: const EdgeInsets.all(10),
-        margin: const EdgeInsets.all(10),
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
@@ -46,6 +45,7 @@ class Chart extends StatelessWidget {
               theme.primaryColor.withOpacity(0),
             ],
           ),
+          borderRadius: BorderRadius.circular(10),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
