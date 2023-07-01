@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 enum ExpenseType {
   none,
   food,
@@ -59,4 +61,14 @@ class Expense {
   static const keyAmount = 'amount';
   static const keyType = 'type';
   static const keyDate = 'date';
+
+  static const expenseTypeToIconMap = {
+    ExpenseType.food: Icons.restaurant,
+    ExpenseType.leisure: Icons.chair,
+    ExpenseType.none: Icons.deselect,
+    ExpenseType.travel: Icons.travel_explore,
+    ExpenseType.work: Icons.work,
+  };
+
+  IconData get typeIcon => expenseTypeToIconMap[type] ?? Icons.deselect;
 }

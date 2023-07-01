@@ -77,13 +77,21 @@ class ExpenseListItem extends StatelessWidget {
             ),
           ),
         ),
-        title: Text(
-          expense.title,
-          style: theme.textTheme.titleSmall,
+        title: Center(
+          child: Text(
+            expense.title,
+            style: theme.textTheme.titleSmall,
+          ),
         ),
-        subtitle: Text(
-          DateFormat.yMMMd().format(expense.date),
-          style: theme.textTheme.titleSmall,
+        subtitle: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Icon(expense.typeIcon),
+            Text(
+              DateFormat.yMMMd().format(expense.date),
+              style: theme.textTheme.bodyMedium,
+            ),
+          ],
         ),
         trailing: mq.size.width > 460
             ? Row(

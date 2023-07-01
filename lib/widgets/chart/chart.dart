@@ -32,12 +32,21 @@ class Chart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //var test = groupedTransactionValues;
+    final theme = Theme.of(context);
     return Card(
       elevation: 6,
       margin: const EdgeInsets.all(20),
-      child: Padding(
+      child: Container(
         padding: const EdgeInsets.all(10),
+        margin: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              theme.colorScheme.primary.withOpacity(0.3),
+              theme.primaryColor.withOpacity(0),
+            ],
+          ),
+        ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: groupedTransactionValues
