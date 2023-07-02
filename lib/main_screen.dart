@@ -103,7 +103,7 @@ class _MainPageState extends State<MainPage> {
           future: providerExpenses.fetchAndSetExpenses(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return const CircularProgressIndicator();
+              return const Center(child: CircularProgressIndicator());
             }
             return Consumer<Expenses>(builder: (context, value, child) {
               return ExpenseList(

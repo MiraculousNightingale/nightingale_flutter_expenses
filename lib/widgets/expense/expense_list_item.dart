@@ -64,78 +64,79 @@ class ExpenseListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final mq = MediaQuery.of(context);
     final theme = Theme.of(context);
-    return Card(
-      child: ListTile(
-        leading: CircleAvatar(
-          radius: 30,
-          child: Padding(
-            padding: const EdgeInsets.all(6),
-            child: FittedBox(
-              child: Text(
-                '\$${expense.amount}',
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: ClipRRect(
+        child: Dismissible(
+          key: ValueKey(expense.id),
+          direction: DismissDirection.endToStart,
+          onDismissed: (_) => _deleteExpense(context),
+          background: Container(
+            decoration: BoxDecoration(
+              color: theme.colorScheme.error,
+              borderRadius: BorderRadius.circular(4),
+            ),
+            margin: EdgeInsets.symmetric(
+              vertical: theme.cardTheme.margin!.vertical,
+            ),
+            alignment: Alignment.centerRight,
+            child: const Padding(
+              padding: EdgeInsets.all(16),
+              child: Icon(
+                Icons.delete_forever_outlined,
+                color: Colors.white,
               ),
             ),
           ),
-        ),
-        title: Center(
-          child: Text(
-            expense.title,
-            style: theme.textTheme.titleSmall,
-          ),
-        ),
-        subtitle: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Icon(expense.typeIcon),
-            Text(
-              DateFormat.yMMMd().format(expense.date),
-              style: theme.textTheme.bodyMedium,
-            ),
-          ],
-        ),
-        trailing: mq.size.width > 460
-            ? Row(
-                mainAxisSize: MainAxisSize.min,
+          child: Card(
+            child: ListTile(
+              leading: CircleAvatar(
+                radius: 30,
+                child: Padding(
+                  padding: const EdgeInsets.all(6),
+                  child: FittedBox(
+                    child: Text(
+                      '\$${expense.amount}',
+                    ),
+                  ),
+                ),
+              ),
+              title: Center(
+                child: Text(
+                  expense.title,
+                  style: theme.textTheme.titleSmall,
+                ),
+              ),
+              subtitle: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  OutlinedButton.icon(
-                    onPressed: () => _showEditingForm(context),
-                    icon: const Icon(
-                      Icons.edit,
+                  Icon(expense.typeIcon),
+                  Text(
+                    DateFormat.yMMMd().format(expense.date),
+                    style: theme.textTheme.bodyMedium,
+                  ),
+                ],
+              ),
+              trailing: mq.size.width > 460
+                  ? OutlinedButton.icon(
+                      onPressed: () => _showEditingForm(context),
+                      icon: const Icon(
+                        Icons.edit,
+                        color: Colors.black,
+                      ),
+                      label: const Text(
+                        'Edit',
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    )
+                  : IconButton(
+                      onPressed: () => _showEditingForm(context),
+                      icon: const Icon(Icons.edit),
                       color: Colors.black,
                     ),
-                    label: const Text(
-                      'Edit',
-                      style: TextStyle(color: Colors.black),
-                    ),
-                  ),
-                  OutlinedButton.icon(
-                    onPressed: () => _deleteExpense(context),
-                    icon: const Icon(
-                      Icons.delete_outline,
-                      color: Colors.red,
-                    ),
-                    label: const Text(
-                      'Delete',
-                      style: TextStyle(color: Colors.red),
-                    ),
-                  ),
-                ],
-              )
-            : Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  IconButton(
-                    onPressed: () => _showEditingForm(context),
-                    icon: const Icon(Icons.edit),
-                    color: Colors.black,
-                  ),
-                  IconButton(
-                    onPressed: () => _deleteExpense(context),
-                    icon: const Icon(Icons.delete_outline),
-                    color: Colors.red[900],
-                  ),
-                ],
-              ),
+            ),
+          ),
+        ),
       ),
     );
   }

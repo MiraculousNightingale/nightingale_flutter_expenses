@@ -26,7 +26,7 @@ class ThemeConfig {
 
   static final cardTheme = defaultTheme.cardTheme.copyWith(
     color: colorScheme.secondaryContainer,
-    margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+    margin: const EdgeInsets.symmetric(vertical: 8),
   );
 
   static final elevatedButtonTheme = ElevatedButtonThemeData(
