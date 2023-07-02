@@ -9,6 +9,14 @@ class Expenses with ChangeNotifier {
 
   List<Expense> get expenses => [..._expenses];
 
+  List<Expense> get recentExpenses => _expenses
+      .where(
+        (element) => element.date.isAfter(
+          DateTime.now().subtract(const Duration(days: 7)),
+        ),
+      )
+      .toList();
+
   Future<void> fetchAndSetExpenses() async {
     final expenseDocs = await _localstore.collection('expenses').get();
     if (expenseDocs != null) {

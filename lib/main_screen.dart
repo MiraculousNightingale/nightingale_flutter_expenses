@@ -18,30 +18,6 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  final List<Expense> _userTransactions = [
-    Expense(
-      title: 'Transaction 1',
-      amount: 228,
-      type: ExpenseType.food,
-      date: DateTime.now(),
-      id: 'cock1',
-    ),
-    Expense(
-      title: 'Transaction 2',
-      amount: 322,
-      type: ExpenseType.leisure,
-      date: DateTime.now(),
-      id: 'cock2',
-    ),
-    Expense(
-      title: 'Transaction 3',
-      amount: 822,
-      type: ExpenseType.travel,
-      date: DateTime.now(),
-      id: 'cock3',
-    ),
-  ];
-
   void _showTransactionForm(BuildContext context) {
     final emptyExpense = Expense.empty();
     showModalBottomSheet(
@@ -57,15 +33,13 @@ class _MainPageState extends State<MainPage> {
     );
   }
 
-  List<Expense> get _recentTransactions {
-    return Provider.of<Expenses>(context, listen: false)
-        .expenses
-        .where(
-          (element) => element.date.isAfter(
-            DateTime.now().subtract(const Duration(days: 7)),
-          ),
-        )
-        .toList();
+  late final Future<void> fetchExpensesFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchExpensesFuture =
+        Provider.of<Expenses>(context, listen: false).fetchAndSetExpenses();
   }
 
   bool _showChart = false;
@@ -92,30 +66,29 @@ class _MainPageState extends State<MainPage> {
       ],
     );
 
-    final providerExpenses = Provider.of<Expenses>(context, listen: false);
-
-    final SizedBox expenseList = SizedBox(
+    final expenseList = SizedBox(
       height: (MediaQuery.of(context).size.height -
               appBar.preferredSize.height -
               MediaQuery.of(context).padding.top) *
           0.7,
       child: FutureBuilder(
-          future: providerExpenses.fetchAndSetExpenses(),
+          future: fetchExpensesFuture,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(child: CircularProgressIndicator());
             }
-            return Consumer<Expenses>(builder: (context, value, child) {
-              return ExpenseList(
-                expenses: value.expenses,
-              );
-            });
+            return Consumer<Expenses>(
+              builder: (context, value, child) =>
+                  ExpenseList(expenses: value.expenses),
+            );
           }),
     );
 
-    final chart = _showTypeChart
-        ? TypeChart(expenses: providerExpenses.expenses)
-        : Chart(recentTransactions: _recentTransactions);
+    final chart = Consumer<Expenses>(
+      builder: (context, value, child) => _showTypeChart
+          ? TypeChart(expenses: value.expenses)
+          : Chart(recentTransactions: value.recentExpenses),
+    );
 
     return Scaffold(
       appBar: appBar,
