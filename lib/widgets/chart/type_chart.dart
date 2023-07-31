@@ -12,7 +12,8 @@ class TypeChart extends StatelessWidget {
   final List<Expense> expenses;
 
   List<ExpenseBucket> get buckets => [
-        for (final type in ExpenseType.values)
+        for (final type in ExpenseType.values
+            .where((element) => element != ExpenseType.none))
           ExpenseBucket.forType(expenses, type)
       ];
 
