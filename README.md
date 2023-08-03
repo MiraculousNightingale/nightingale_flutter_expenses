@@ -1,6 +1,6 @@
 # Expenses App
 
-An application for expense management, which I created to practice Flutter development.
+An application for expense management which I created to practice Flutter development.
 
 Generally based on the udemy course which I followed. 
 
