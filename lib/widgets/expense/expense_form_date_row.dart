@@ -14,13 +14,14 @@ class ExpenseFormDateRow extends StatefulWidget {
 
 class _ExpenseFormDateRowState extends State<ExpenseFormDateRow> {
   DateTime? _selectedDate;
+  final DateTime initialDate = DateTime.now();
 
   Future<void> _pickDate() async {
     final pickedDate = await showDatePicker(
       context: context,
-      initialDate: DateTime.now(),
+      initialDate: initialDate,
       firstDate: DateTime(2019),
-      lastDate: DateTime.now(),
+      lastDate: initialDate,
     );
     if (pickedDate != null) {
       setState(() => _selectedDate = pickedDate);
@@ -31,7 +32,11 @@ class _ExpenseFormDateRowState extends State<ExpenseFormDateRow> {
   @override
   void initState() {
     super.initState();
-    _selectedDate = widget.expense.date;
+    if (widget.expense.date == Expense.emptyDate) {
+      _selectedDate = initialDate;
+    } else {
+      _selectedDate = widget.expense.date;
+    }
   }
 
   @override
