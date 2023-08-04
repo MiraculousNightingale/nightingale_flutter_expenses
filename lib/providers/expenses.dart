@@ -7,7 +7,9 @@ class Expenses with ChangeNotifier {
   final _localstore = Localstore.instance;
   final _expenses = <Expense>[];
 
-  List<Expense> get expenses => [..._expenses];
+  List<Expense> get expenses => [..._expenses]..sort(
+      (a, b) => b.date.compareTo(a.date),
+    );
 
   List<Expense> get recentExpenses => _expenses
       .where(

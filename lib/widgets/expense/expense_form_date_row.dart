@@ -19,7 +19,7 @@ class _ExpenseFormDateRowState extends State<ExpenseFormDateRow> {
   Future<void> _pickDate() async {
     final pickedDate = await showDatePicker(
       context: context,
-      initialDate: initialDate,
+      initialDate: widget.expense.date,
       firstDate: DateTime(2019),
       lastDate: initialDate,
     );
@@ -34,6 +34,7 @@ class _ExpenseFormDateRowState extends State<ExpenseFormDateRow> {
     super.initState();
     if (widget.expense.date == Expense.emptyDate) {
       _selectedDate = initialDate;
+      widget.expense.date = initialDate;
     } else {
       _selectedDate = widget.expense.date;
     }
