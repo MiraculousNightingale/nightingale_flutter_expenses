@@ -4,7 +4,7 @@ An application for expense management which I created to practice Flutter develo
 
 Generally based on the udemy course which I followed. 
 
-Localstore is used to store app data locally on the device.
+Localstore is used to store app data locally on the device. 
 
 ## Preview
 
